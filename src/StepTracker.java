@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class StepTracker {
-    private String target = "0";
+    private String target = "";
     public void stepDay(Scanner scanner){
         while (true) {
             System.out.print("Введите количества шагов в день: ");
