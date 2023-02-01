@@ -27,9 +27,27 @@ public class StepTracker {
     }
 
     public void showMonth(Scanner scanner, ArrayList<MonthData> monthData){
+        if(monthData.size() > 0) {
+            long time = monthData.get(0).getStartTime();
+            ArrayList<MonthData> monthDataCopy = new ArrayList<>(monthData);
+            for (int j = 0; j< monthDataCopy.size()-1; j++) {
+                for (int i = 0; i < monthDataCopy.size(); i++) {
+                    if (time > monthDataCopy.get(i).getStartTime()) {
+                        monthData.set(i, monthDataCopy.get(i - 1));
+                        monthData.set(i - 1, monthDataCopy.get(i));
+                        time = monthDataCopy.get(i).getStartTime();
+                    }
+                }
+            }
+        }else {
+            System.out.println("Вами не пройдено не одного дня.");
+            return;
+        }
+        Converter converter = new Converter();
         String yearNumber;
         String monthNumber;
         int numberTarget = 0;
+        long day = monthData.get(0).getStartTime();
         double allStepMonth = 0;
         while (true) {
             try {
@@ -53,19 +71,27 @@ public class StepTracker {
                 System.out.println("Введено не целое число.");
             }
         }
+
         for (MonthData date : monthData) {
             if (date.getYear() == Integer.parseInt(yearNumber) && date.getMonth() == Integer.parseInt(monthNumber)) {
                 System.out.println(date.getLocalDate() + ": прошли шагов " + date.getStep() +
-                        ", потратели килокалорий " + ((double) date.getStep()) * 0.05 +
-                        " и прошли дистанцию " + ((double) date.getStep()) * 75 / 100_000 + " км.");
+                        ", потратели килокалорий " + converter.getKilocalories(date.getStep()) +
+                        " и прошли дистанцию " + converter.getKm(date.getStep()) + " км.");
                 allStepMonth += date.getStep();
-                if (date.getStep() >= Integer.parseInt(target)) {
+                if (date.getStep() >= Integer.parseInt(target) && day == date.getStartTime()) {
                     numberTarget++;
+                    day++;
+                } else if (date.getStep() >= Integer.parseInt(target)) {
+                    day = date.getStartTime()+1;
+                    numberTarget = 1;
+                } else{
+                    day = date.getStartTime()+1;
+                    numberTarget = 0;
                 }
             }
         }
         System.out.println("В этот месяц вы достигли цели: " + numberTarget +
-                " раз и потратели килокалорий " + allStepMonth * 0.05 +
-                ", пройдена дистанция " + allStepMonth * 75 / 100_000 + " км.");
+                " раз подряд и потратели килокалорий " + converter.getKilocalories(allStepMonth) +
+                ", пройдена дистанция " + converter.getKm(allStepMonth) + " км.");
     }
 }

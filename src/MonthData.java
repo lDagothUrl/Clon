@@ -81,6 +81,7 @@ public class MonthData {
         localDate = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day));
     }
 
+    public long getStartTime(){return localDate.toEpochDay();}
     public int getMonth(){
         return localDate.getMonthValue();
     }

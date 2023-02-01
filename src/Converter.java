@@ -13,12 +13,18 @@ public class Converter {
                     System.out.println("Количество шагов не может быть отрицательным.");
                 } else{
                     System.out.printf("За %S шагов: потратите %S килокалорий и пройдете дистанцию %S км.\n"
-                            , flag, parsFlag * 0.05, (parsFlag * 75) / 100_000);
+                            , flag, getKilocalories(parsFlag), getKm(parsFlag));
                     break;
                 }
             } catch (Exception e) {
                 System.out.printf("Это не целое число %S.\n", flag);
             }
         }
+    }
+    public double getKilocalories(double step){
+        return step*0.05;
+    }
+    public double getKm(double step){
+        return step*75/100_000;
     }
 }
