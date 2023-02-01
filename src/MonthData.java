@@ -2,16 +2,14 @@ import java.time.LocalDate;
 import java.util.Scanner;
 
 public class MonthData {
-    private LocalDate localDate;
+    private final LocalDate localDate;
     private int step;
-    private Scanner scanner;
 
     MonthData(Scanner scanner){
-        this.scanner = scanner;
-        String year = "1";
-        String month = "1";
-        String day = "1";
-        String step = "0";
+        String year;
+        String month;
+        String day;
+        String step;
         while (true) {
             try {
                 System.out.println("Введите год: ");
