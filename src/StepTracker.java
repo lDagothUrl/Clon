@@ -29,9 +29,11 @@ public class StepTracker {
     public void showMonth(Scanner scanner, ArrayList<MonthData> monthData){
         if(monthData.size() > 0) {
             long time = monthData.get(0).getStartTime();
-            ArrayList<MonthData> monthDataCopy = new ArrayList<>(monthData);
-            for (int j = 0; j< monthDataCopy.size()-1; j++) {
-                for (int i = 0; i < monthDataCopy.size(); i++) {
+            ArrayList<MonthData> monthDataCopy;
+            int sizeDate = monthData.size();
+            for (int j = 0; j< sizeDate-1; j++) {
+                monthDataCopy = new ArrayList<>(monthData);
+                for (int i = 0; i < sizeDate; i++) {
                     if (time > monthDataCopy.get(i).getStartTime()) {
                         monthData.set(i, monthDataCopy.get(i - 1));
                         monthData.set(i - 1, monthDataCopy.get(i));
