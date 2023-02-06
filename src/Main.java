@@ -1,38 +1,37 @@
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        ArrayList<MonthData> monthData = new ArrayList<>();
+        MonthData monthData;
         Converter converter = new Converter();
         StepTracker stepTracker = new StepTracker();
         try (Scanner scanner = new Scanner(System.in)) {
-            char count;
+            monthData = new MonthData();
+            String count;
             while (true) {
                 printMenu();
-                count = scanner.next().charAt(0);
+                count = scanner.next();
                 switch (count) {
-                    case '1':
+                    case "1":
                         stepTracker.stepDay(scanner);
                         break;
-                    case '2':
-                        monthData.add(new MonthData(scanner));
+                    case "2":
+                        monthData.add(scanner);
                         break;
-                    case '3':
-                        stepTracker.showMonth(scanner, monthData);
+                    case "3":
+                        stepTracker.showMonth(scanner, monthData.getTreeDate());
                         break;
-                    case '4':
+                    case "4":
                         stepTracker.showTarget();
                         break;
-                    case '5':
+                    case "5":
                         converter.stepConversion(scanner);
                         break;
-                    case '0':
+                    case "0":
                         System.out.println("Выход.");
                         return;
                     default:
-                        System.out.println("Вы ввели не число.");
+                        System.out.println("Вы ввели не число из меню.");
                         break;
                 }
             }

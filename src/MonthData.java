@@ -1,11 +1,11 @@
 import java.time.LocalDate;
-import java.util.Scanner;
+import java.util.*;
 
 public class MonthData {
-    private final LocalDate localDate;
-    private int step;
+    private final TreeMap<LocalDate, Integer> treeDate = new TreeMap<>(Comparator.comparing(LocalDate::toEpochDay));
+    private int step = 0;
 
-    MonthData(Scanner scanner){
+    public void add(Scanner scanner){
         String year;
         String month;
         String day;
@@ -78,21 +78,20 @@ public class MonthData {
                 System.out.println("Введено не целое число.");
             }
         }
-        localDate = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day));
+        if (treeDate.get(LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day))) != null){
+            treeDate.remove(LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day)));
+        }
+        treeDate.put(LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day)), this.step);
     }
 
-    public long getStartTime(){return localDate.toEpochDay();}
-    public int getMonth(){
-        return localDate.getMonthValue();
+    public long getStartTime(LocalDate date){return date.toEpochDay();}
+    public int getMonth(LocalDate date){
+        return date.getMonthValue();
     }
-    public int getYear(){
-        return localDate.getYear();
+    public int getYear(LocalDate date){
+        return date.getYear();
     }
-    public int getStep(){
-        return step;
-    }
-
-    public LocalDate getLocalDate() {
-        return localDate;
+    public TreeMap<LocalDate, Integer> getTreeDate() {
+        return treeDate;
     }
 }

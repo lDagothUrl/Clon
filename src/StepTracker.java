@@ -1,8 +1,8 @@
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.time.LocalDate;
+import java.util.*;
 
 public class StepTracker {
-    private String target = "";
+    private String target = "10000";
     public void stepDay(Scanner scanner){
         while (true) {
             System.out.print("Введите количества шагов в день: ");
@@ -26,31 +26,19 @@ public class StepTracker {
         }
     }
 
-    public void showMonth(Scanner scanner, ArrayList<MonthData> monthData){
-        if(monthData.size() > 0) {
-            long time = monthData.get(0).getStartTime();
-            ArrayList<MonthData> monthDataCopy;
-            int sizeDate = monthData.size();
-            for (int j = 0; j< sizeDate-1; j++) {
-                monthDataCopy = new ArrayList<>(monthData);
-                for (int i = 0; i < sizeDate; i++) {
-                    if (time > monthDataCopy.get(i).getStartTime()) {
-                        monthData.set(i, monthDataCopy.get(i - 1));
-                        monthData.set(i - 1, monthDataCopy.get(i));
-                        time = monthDataCopy.get(i).getStartTime();
-                    }
-                }
-            }
-        }else {
-            System.out.println("Вами не пройдено не одного дня.");
+    public void showMonth(Scanner scanner, TreeMap<LocalDate, Integer> monthData){
+        if(monthData.isEmpty()){
+            System.out.println("Вы не прошли ни шага.");
             return;
         }
+        MonthData objMonthData = new MonthData();//новый объект для методов
+        int seriesMax = 0;
+        long day = 0;
         Converter converter = new Converter();
         String yearNumber;
         String monthNumber;
         int numberTarget = 0;
-        long day = monthData.get(0).getStartTime();
-        double allStepMonth = 0;
+        int allStepMonth = 0;
         while (true) {
             try {
                 System.out.println("Введите год: ");
@@ -74,26 +62,32 @@ public class StepTracker {
             }
         }
 
-        for (MonthData date : monthData) {
-            if (date.getYear() == Integer.parseInt(yearNumber) && date.getMonth() == Integer.parseInt(monthNumber)) {
-                System.out.println(date.getLocalDate() + ": прошли шагов " + date.getStep() +
-                        ", потратели килокалорий " + converter.getKilocalories(date.getStep()) +
-                        " и прошли дистанцию " + converter.getKm(date.getStep()) + " км.");
-                allStepMonth += date.getStep();
-                if (date.getStep() >= Integer.parseInt(target) && day == date.getStartTime()) {
+        for (LocalDate date : monthData.keySet()) {
+            if (objMonthData.getYear(date) == Integer.parseInt(yearNumber) &&
+                    objMonthData.getMonth(date) == Integer.parseInt(monthNumber)) {
+                int step = monthData.get(date) != null ? monthData.get(date) : 0;
+                System.out.println(date + ": прошли шагов " + step +
+                        ", потратели килокалорий " + converter.getKilocalories(step) +
+                        " и прошли дистанцию " + converter.getKm(step) + " км.");
+                allStepMonth += step;
+                if (step >= Integer.parseInt(target) && day == objMonthData.getStartTime(date)) {
                     numberTarget++;
                     day++;
-                } else if (date.getStep() >= Integer.parseInt(target)) {
-                    day = date.getStartTime()+1;
+                } else if (step >= Integer.parseInt(target)) {
+                    day = objMonthData.getStartTime(date)+1;
                     numberTarget = 1;
                 } else{
-                    day = date.getStartTime()+1;
+                    day = objMonthData.getStartTime(date)+1;
                     numberTarget = 0;
+                }
+                if(seriesMax < numberTarget){
+                    seriesMax = numberTarget;
                 }
             }
         }
-        System.out.println("В этот месяц вы достигли цели: " + numberTarget +
-                " раз подряд и потратели килокалорий " + converter.getKilocalories(allStepMonth) +
+        System.out.println("В этот месяце: " + numberTarget +
+                " раз(последняя серия достижения цели) и самая большая серия " + seriesMax +
+                " раз, потратели килокалорий " + converter.getKilocalories(allStepMonth) +
                 ", пройдена дистанция " + converter.getKm(allStepMonth) + " км.");
     }
 }

@@ -5,7 +5,7 @@ public class Converter {
         while (true) {
             System.out.print("Введите количества шагов: ");
             String flag = "0";
-            double parsFlag;
+            int parsFlag;
             try {
                 flag = scanner.next();
                 parsFlag = Integer.parseInt(flag);
@@ -21,10 +21,10 @@ public class Converter {
             }
         }
     }
-    public double getKilocalories(double step){
-        return step*0.05;
+    public String getKilocalories(int step){
+        return String.format("%.3f", (double)step*0.05);
     }
-    public double getKm(double step){
-        return step*75/100_000;
+    public String getKm(int step){
+        return String.format("%.3f", (double)step*75/100_000);
     }
 }
