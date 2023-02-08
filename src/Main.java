@@ -5,8 +5,9 @@ public class Main {
         MonthData monthData;
         Converter converter = new Converter();
         StepTracker stepTracker = new StepTracker();
+        monthData = new MonthData();
+        monthData.reader();
         try (Scanner scanner = new Scanner(System.in)) {
-            monthData = new MonthData();
             String count;
             while (true) {
                 printMenu();
@@ -27,8 +28,12 @@ public class Main {
                     case "5":
                         converter.stepConversion(scanner);
                         break;
+                    case "6":
+                        monthData.printAll();
+                        break;
                     case "0":
                         System.out.println("Выход.");
+                        monthData.writerFile();
                         return;
                     default:
                         System.out.println("Вы ввели не число из меню.");
@@ -44,6 +49,7 @@ public class Main {
                 "Введите 3 для: просмотра статистики за определенный месяц.\n" +
                 "Введите 4 для: просмотра цели на день.\n" +
                 "Введите 5 для: перевода шагов в калории.\n" +
+                "Введите 6 для: получения всей статистики.\n" +
                 "Введите 0 для: выхода из программы.\n");
     }
 }

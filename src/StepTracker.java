@@ -4,13 +4,15 @@ import java.util.*;
 public class StepTracker {
     private String target = "10000";
     public void stepDay(Scanner scanner){
+        int parsIntTarget;
         while (true) {
             System.out.print("Введите количества шагов в день: ");
             try {
                 target = scanner.next();
-                if (Integer.parseInt(target) <= 0) {
+                parsIntTarget = Integer.parseInt(target);
+                if (parsIntTarget <= 0) {
                     System.out.println("Количество шагов не может быть отрицательным или равно 0.");
-                } else if (Integer.parseInt(target) > 0) {
+                } else if (parsIntTarget > 0) {
                     break;
                 }
             } catch (Exception e) {
@@ -36,13 +38,16 @@ public class StepTracker {
         long day = 0;
         Converter converter = new Converter();
         String yearNumber;
+        int parsIntYear;
         String monthNumber;
+        int parsIntMonth;
         int numberTarget = 0;
         int allStepMonth = 0;
         while (true) {
             try {
                 System.out.println("Введите год: ");
                 yearNumber = scanner.next();
+                parsIntYear = Integer.parseInt(yearNumber);
                 break;
             } catch (Exception e) {
                 System.out.println("Введено не целое число.");
@@ -52,7 +57,8 @@ public class StepTracker {
             try {
                 System.out.println("Введите месяц от 1 до 12: ");
                 monthNumber = scanner.next();
-                if (Integer.parseInt(monthNumber) > 12 || Integer.parseInt(monthNumber) < 1) {
+                parsIntMonth = Integer.parseInt(monthNumber);
+                if (parsIntMonth > 12 || parsIntMonth < 1) {
                     System.out.println("Месяцев всего от 1 до 12.");
                 } else {
                     break;
@@ -63,17 +69,18 @@ public class StepTracker {
         }
 
         for (LocalDate date : monthData.keySet()) {
-            if (objMonthData.getYear(date) == Integer.parseInt(yearNumber) &&
-                    objMonthData.getMonth(date) == Integer.parseInt(monthNumber)) {
+            if (objMonthData.getYear(date) == parsIntYear &&
+                    objMonthData.getMonth(date) == parsIntMonth) {
                 int step = monthData.get(date) != null ? monthData.get(date) : 0;
                 System.out.println(date + ": прошли шагов " + step +
                         ", потратели килокалорий " + converter.getKilocalories(step) +
                         " и прошли дистанцию " + converter.getKm(step) + " км.");
                 allStepMonth += step;
-                if (step >= Integer.parseInt(target) && day == objMonthData.getStartTime(date)) {
+                int intTarget = Integer.parseInt(target);
+                if (step >= intTarget && day == objMonthData.getStartTime(date)) {
                     numberTarget++;
                     day++;
-                } else if (step >= Integer.parseInt(target)) {
+                } else if (step >= intTarget) {
                     day = objMonthData.getStartTime(date)+1;
                     numberTarget = 1;
                 } else{
