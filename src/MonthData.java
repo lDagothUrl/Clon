@@ -2,11 +2,14 @@ import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
 
+import static javax.swing.JOptionPane.showInputDialog;
+import static javax.swing.JOptionPane.showMessageDialog;
+
 public class MonthData {
     private final TreeMap<LocalDate, Integer> treeDate = new TreeMap<>(Comparator.comparing(LocalDate::toEpochDay));
-    private int step = 0;
+    private int step;
 
-    public void add(Scanner scanner){
+    public void add(){
         String year;
         String month;
         String day;
@@ -17,79 +20,88 @@ public class MonthData {
         int parsIntStep;
         while (true) {
             try {
-                System.out.println("Введите год: ");
-                year = scanner.next();
+                year = showInputDialog("Введите год:");
+                if(year == null){
+                    return;
+                }
                 parsIntYear = Integer.parseInt(year);
                 if (parsIntYear > LocalDate.now().getYear()) {
-                    System.out.println("Вы из будующего.");
+                    showMessageDialog(null, "Вы из будующего.");
                 }else if(parsIntYear < LocalDate.now().getYear()-112){
-                    System.out.println("Вы старее песка. Вам бы полежать.");
+                    showMessageDialog(null,"Вы старее песка. Вам бы полежать.");
                 }
                 else {
                     break;
                 }
             } catch (Exception e) {
-                System.out.println("Введено не целое число.");
+                showMessageDialog(null,"Введено не целое число.");
             }
         }
         while (true) {
             try {
-                System.out.println("Введите месяц от 1 до 12: ");
-                month = scanner.next();
+                month = showInputDialog("Введите месяц от 1 до 12:");
+                if (month == null){
+                    return;
+                }
                 parsIntMonth = Integer.parseInt(month);
                 if (parsIntMonth > 12 || parsIntMonth < 1) {
-                    System.out.println("Месяцев всего от 1 до 12.");
+                    showMessageDialog(null, "Месяцев всего от 1 до 12.");
                 }
                 else {
                     break;
                 }
             } catch (Exception e) {
-                System.out.println("Введено не целое число.");
+                showMessageDialog(null, "Введено не целое число.");
             }
         }
         while (true) {
             try {
-                System.out.println("Введите день: ");
-                day = scanner.next();
+                day = showInputDialog("Введите день:");
+                if (day == null){
+                    return;
+                }
                 parsIntDay = Integer.parseInt(day);
                 if (parsIntDay > LocalDate.of(parsIntYear, parsIntMonth,1).
                         plusMonths(1).minusDays(1).getDayOfMonth()) {
-                    System.out.println("В месяце дней: " +
-                            LocalDate.of(parsIntYear, parsIntMonth, 1).plusMonths(1)
-                                    .minusDays(1).getDayOfMonth());
+                    String str = "В месяце дней: "+LocalDate.of(parsIntYear, parsIntMonth, 1).
+                            plusMonths(1).minusDays(1).getDayOfMonth();
+                    showMessageDialog(null, str);
                 }else if(parsIntDay <= 0){
-                    System.out.println("Отрицательных дней не существует, " +
+                    showMessageDialog(null,"Отрицательных дней не существует, " +
                             "хоть и в это день ваше настроение может быть плохим.");
                 }
                 else {
                     break;
                 }
             } catch (Exception e) {
-                System.out.println("Введено не целое число.");
+                showMessageDialog(null, "Введено не целое число.");
             }
         }
         while (true) {
             try {
-                System.out.println("Введите число шагов за день: ");
-                step = scanner.next();
+                step = showInputDialog("Введите число шагов за день:");
+                if (step == null){
+                    return;
+                }
                 parsIntStep = Integer.parseInt(step);
                 if (parsIntStep > 274_252) {
-                    System.out.println("Мировой рекорд 274_252 шагов в день. Вы попали в книгу рекордов гинеса.");
+                    showMessageDialog(null, "Мировой рекорд 274_252 шагов в день. Вы попали в книгу рекордов гинеса.");
                 }else if(parsIntStep < 0){
-                    System.out.println("Ходьба назад-это тоже шаги, укажите положительным числом.");
+                    showMessageDialog(null, "Ходьба назад-это тоже шаги, укажите положительным числом.");
                 }
                 else {
                     this.step = parsIntStep;
                     break;
                 }
             } catch (Exception e) {
-                System.out.println("Введено не целое число.");
+                showMessageDialog(null, "Введено не целое число.");
             }
         }
         if (treeDate.get(LocalDate.of(parsIntYear, parsIntMonth, parsIntDay)) != null){
             treeDate.remove(LocalDate.of(parsIntYear, parsIntMonth, parsIntDay));
         }
         treeDate.put(LocalDate.of(parsIntYear, parsIntMonth, parsIntDay), this.step);
+        writerFile();
     }
 
     public void writerFile(){
@@ -127,13 +139,13 @@ public class MonthData {
         int year = 1;
         int month = 1;
         int day = 1;
-        Integer step;
+        Integer steps;
         int flag = 1;
         for (int i = 0; i < strTokens.size(); i++) {
             if (flag%4 == 0){
                 flag =0;
-                step = Integer.parseInt(strTokens.get(i));
-                treeDate.put(LocalDate.of(year, month, day), step);
+                steps = Integer.parseInt(strTokens.get(i));
+                treeDate.put(LocalDate.of(year, month, day), steps);
             } else if (flag % 3 == 0) {
                 day = Integer.parseInt(strTokens.get(i));
             } else if (flag % 2 == 0) {
@@ -144,14 +156,16 @@ public class MonthData {
             flag++;
         }
         } catch (Exception e) {
-            System.out.println("Привет! Вы у нас первый раз ^-^\nДавайте походим вместе.");
+            showMessageDialog(null, "Привет! Вы у нас первый раз ^-^\nДавайте походим вместе.");
         }
     }
 
     public void printAll(){
+        String str = "";
         for(LocalDate date : treeDate.keySet()){
-            System.out.printf("В этот день %s вы прошли %s шагов.\n", date, treeDate.get(date));
+            str += "В этот день " + date + " вы прошли " + treeDate.get(date) +" шагов.\n";
         }
+        showMessageDialog(null, str);
     }
 
     public long getStartTime(LocalDate date){return date.toEpochDay();}
