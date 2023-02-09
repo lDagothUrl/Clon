@@ -8,6 +8,11 @@ import static javax.swing.JOptionPane.showMessageDialog;
 public class MonthData {
     private final TreeMap<LocalDate, Integer> treeDate = new TreeMap<>(Comparator.comparing(LocalDate::toEpochDay));
     private int step;
+    private StepTracker stepTracker;
+    MonthData(){}
+    MonthData(StepTracker stepTracker){
+        this.stepTracker =stepTracker;
+    }
 
     public void add(){
         String year;
@@ -107,6 +112,7 @@ public class MonthData {
     public void writerFile(){
         while (true) {
             try (FileWriter writer = new FileWriter("date.txt", false)) {
+                writer.write(stepTracker.getTarget());
                 writer.write(treeDate.toString());
                 break;
             } catch (Exception e) {
@@ -136,12 +142,13 @@ public class MonthData {
         while(tokenizer.hasMoreTokens()){
             strTokens.add(tokenizer.nextToken());
         }
+        stepTracker.setTarget(strTokens.get(0));
         int year = 1;
         int month = 1;
         int day = 1;
-        Integer steps;
+        int steps;
         int flag = 1;
-        for (int i = 0; i < strTokens.size(); i++) {
+        for (int i = 1; i < strTokens.size(); i++) {
             if (flag%4 == 0){
                 flag =0;
                 steps = Integer.parseInt(strTokens.get(i));

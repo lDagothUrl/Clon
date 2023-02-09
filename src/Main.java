@@ -5,7 +5,7 @@ public class Main {
         MonthData monthData;
         Converter converter = new Converter();
         StepTracker stepTracker = new StepTracker();
-        monthData = new MonthData();
+        monthData = new MonthData(stepTracker);
         monthData.reader();
         while (true) {
             switch (printMenu()) {
