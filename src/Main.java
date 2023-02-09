@@ -28,6 +28,9 @@ public class Main {
                     monthData.printAll();
                     break;
                 case 7:
+                    monthData.clearDate();
+                    break;
+                case 8:
                     showMessageDialog(null, "Выход.");
                     monthData.writerFile();
                     return;
@@ -41,12 +44,13 @@ public class Main {
                         "3 для: просмотра статистики за определенный месяц.",
                         "4 для: просмотра цели на день.",
                         "5 для: перевода шагов в калории.",
-                        "6 для: получения всей статистики"};
+                        "6 для: получения всей статистики",
+                        "7 для: удаления статистики"};
                 String indexStr =(String) showInputDialog(null,null,
                         "Menu.", QUESTION_MESSAGE, null, menu, menu[0]);
                 int index = -1;
                 if(indexStr == null){
-                    return 7;
+                    return 8;
                 }
                 for (int i = 0; i<menu.length; i++){
                     if(indexStr.equals(menu[i])){

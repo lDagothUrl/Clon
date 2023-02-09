@@ -174,6 +174,17 @@ public class MonthData {
         }
         showMessageDialog(null, str);
     }
+    public void clearDate(){
+        String da = showInputDialog("Напишите ДА для потверждения.");
+        if(da == null){
+            return;
+        }
+        else if (da.equalsIgnoreCase("да")) {
+            treeDate.clear();
+            writerFile();
+            showMessageDialog(null, "Статистика удалена.");
+        }
+    }
 
     public long getStartTime(LocalDate date){return date.toEpochDay();}
     public int getMonth(LocalDate date){
